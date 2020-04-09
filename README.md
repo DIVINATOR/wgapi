@@ -89,12 +89,12 @@ Map<String, AccountInformation> accountInfo =
 Прочтите [CONTRIBUTING.md](CONTRIBUTING.md) чтобы получить подробную информацию о правилах и процессе подачи запросов на включение кода.
 
 ## Управление версиями
-Мы используем [SemVer](http://semver.org/) для управления версиями. Для доступных версий, см. [tags](https://github.com/DIVINATOR/wgapi/tags). 
+Мы используем [SemVer](http://semver.org/) для управления версиями. Для доступных версий, см. [tags](https://github.com/DIVINATOR/wgapi-client/tags). 
 
 ## Авторы
 * **[Сергей "DIVINATOR"](https://divinator.github.io/)** - *Начальный этап работы* - <b><i>WgApiClient</i></b>
 
-Также представлен список [участников](https://github.com/DIVINATOR/wgapi/graphs/contributors) в этом проекте.
+Также представлен список [участников](https://github.com/DIVINATOR/wgapi-client/graphs/contributors) в этом проекте.
 
 ## Лицензия
 
