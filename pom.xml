@@ -19,8 +19,8 @@
   </licenses>
 
   <scm>
-    <url>https://github.com/DIVINATOR/wgapi</url>
-    <connection>scm:git:https://github.com/DIVINATOR/wgapi.git</connection>
+    <url>https://github.com/DIVINATOR/wgapi-client</url>
+    <connection>scm:git:https://github.com/DIVINATOR/wgapi-client.git</connection>
   </scm>
 
   <developers>
