@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>io.github.divinator.wgapi</groupId>
+  <artifactId>wgapi-client</artifactId>
+  <version>1.0.0</version>
+  <packaging>jar</packaging>
+
+  <name>WgApiClient</name>
+  <description>Client for working with an Wargaming.net Public API</description>
+  <url>https://github.com/DIVINATOR/wgapi</url>
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <scm>
+    <url>https://github.com/DIVINATOR/wgapi</url>
+    <connection>scm:git:https://github.com/DIVINATOR/wgapi.git</connection>
+  </scm>
+
+  <developers>
+    <developer>
+      <id>owner</id>
+      <name>Sergey Divin</name>
+      <email>divinsv@outlook.com</email>
+      <timezone>UTC+5</timezone>
+    </developer>
+  </developers>
+
+  <properties>
+    <maven.compiler.target>1.8</maven.compiler.target>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <http-client>com.google.http-client</http-client>
+    <http-client.version>1.34.2</http-client.version>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>${http-client}</groupId>
+      <artifactId>google-http-client</artifactId>
+      <version>${http-client.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${http-client}</groupId>
+      <artifactId>google-http-client-gson</artifactId>
+      <version>${http-client.version}</version>
+    </dependency>
+  </dependencies>
+
+  <parent>
+    <groupId>org.sonatype.oss</groupId>
+    <artifactId>oss-parent</artifactId>
+    <version>9</version>
+  </parent>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>3.2.1</version>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <phase>package</phase>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>3.2.0</version>
+        <executions>
+          <execution>
+            <id>attach-javadocs</id>
+            <phase>package</phase>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>
