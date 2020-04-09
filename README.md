@@ -34,10 +34,8 @@ Wargaming.net Public API, которые предоставляют доступ
 Документация проекта доступна [тут](#).
 
 ## Установка
-Вы можете найти последний релиз тут: [![Maven](https://img.shields.io/maven-central/v/com.vk.api/sdk.svg)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.vk.api%22%20AND%20a%3A%22sdk%22)
-
-Либо добавить в файл <b>"pom.xml"</b> вашего проекта следующую зависимость:
-```
+Добавить в файл <b>"pom.xml"</b> вашего проекта следующую зависимость:
+```xml
 <dependency>
   <groupId>io.divinator.wgapi</groupId>
   <artifactId>wgapi-client</artifactId>
@@ -49,7 +47,7 @@ Wargaming.net Public API, которые предоставляют доступ
 Доступно несколько возможностей сконструировать обьект:
 + Указать только <b>"application_id"</b>
 ```
-WgApiClient client = new WgApiClient("application_id")
+WgApiClient client = new WgApiClient("application_id");
 ```
 +  Указать <b>"регион"</b> и <b>"application_id"</b>
 ```
@@ -100,4 +98,4 @@ Map<String, AccountInformation> accountInfo =
 
 ## Лицензия
 
-Этот проект лицензируется в соответствии с лицензией MIT — подробности см. в файле [LICENSE](LICENSE).
+Этот проект лицензируется в соответствии с лицензией Apache — подробности см. в файле [LICENSE](LICENSE).
