@@ -26,7 +26,7 @@ import com.google.api.client.util.ObjectParser;
 import java.util.concurrent.Future;
 
 /**
- * Класс описывает обьект клиента для получения данных от Wargaming.net Public API
+ * Класс описывает объект клиента для получения данных от Wargaming.net Public API
  *
  * @author Sergey Divin
  */
@@ -35,8 +35,18 @@ public final class WgApiClient extends AbstractHttpClient {
     private int connectTimeout;
     private final WgApiUrlBuilder wgGenericUrlBuilder;
     private final HttpTransport httpTransport;
-    private final String CLIENT_VERSION = "1.0.0";
+    public final static String CLIENT_VERSION = "2.0.0";
 
+    /**
+     * Конструктор создания объекта WgApiClient
+     *
+     * <p>
+     * Таймаут соединения по умолчанию равен 30000 миллисекунд
+     *
+     * @param httpTransport       Транспортный протокол HTTP
+     * @param jsonFactory         Фабрика обработки JSON
+     * @param wgGenericUrlBuilder объект строителя URL для Wargaming.net Public API
+     */
     public WgApiClient(HttpTransport httpTransport, JsonFactory jsonFactory, WgApiUrlBuilder wgGenericUrlBuilder) {
         this.httpTransport = httpTransport;
         this.wgGenericUrlBuilder = wgGenericUrlBuilder;
@@ -44,22 +54,61 @@ public final class WgApiClient extends AbstractHttpClient {
         setConnectTimeout(30000);
     }
 
-    public WgApiClient(HttpTransport httpTransport, JsonFactory jsonFactory, Region region, String applicationID) {
+    /**
+     * Конструктор создания объекта WgApiClient.
+     *
+     * @param httpTransport Транспортный протокол HTTP
+     * @param jsonFactory   Фабрика обработки JSON
+     * @param region        Регион Wargaming.net Public API для запросов
+     * @param applicationID ID приложения Wargaming.net Public API
+     * @throws WgApiClientException В случае если ID не указан
+     */
+    public WgApiClient(HttpTransport httpTransport, JsonFactory jsonFactory, Region region, String applicationID) throws WgApiClientException {
         this(httpTransport, jsonFactory, new WgApiUrlBuilder().withApplicationID(applicationID).withRegion(region));
     }
 
-    public WgApiClient(HttpTransport httpTransport, Region region, String applicationID) {
+    /**
+     * Конструктор создания объекта WgApiClient.
+     *
+     * <p>
+     * По умолчанию используется GSON фабрика для разбора JSON
+     *
+     * @param httpTransport Транспортный протокол HTTP
+     * @param region        Регион Wargaming.net Public API для запросов
+     * @param applicationID ID приложения Wargaming.net Public API
+     * @throws WgApiClientException В случае если ID не указан
+     */
+    public WgApiClient(HttpTransport httpTransport, Region region, String applicationID) throws WgApiClientException {
         this(httpTransport, GsonFactory.getDefaultInstance(), region, applicationID);
     }
 
-    public WgApiClient(Region region, String applicationID) {
+    /**
+     * Конструктор создания объекта WgApiClient.
+     *
+     * <p>
+     * По умолчанию используется GSON фабрика для разбора JSON и транспортный протокол Google
+     *
+     * @param region        Регион Wargaming.net Public API для запросов
+     * @param applicationID ID приложения Wargaming.net Public API
+     * @throws WgApiClientException В случае если ID не указан
+     */
+    public WgApiClient(Region region, String applicationID) throws WgApiClientException {
         this(new NetHttpTransport(), region, applicationID);
     }
 
-    public WgApiClient(String applicationID) {
+    /**
+     * Конструктор создания объекта WgApiClient c указанием ID приложения.
+     *
+     * <p>
+     * По умолчанию используется GSON фабрика для разбора JSON и транспортный протокол Google,
+     * а также Region - по умолчанию RU
+     *
+     * @param applicationID ID приложения Wargaming.net Public API
+     * @throws WgApiClientException В случае если ID не указан
+     */
+    public WgApiClient(String applicationID) throws WgApiClientException {
         this(Region.RU, applicationID);
     }
-
 
     /**
      * Метод возвращает транспорт HTTP-соединения
@@ -160,6 +209,7 @@ public final class WgApiClient extends AbstractHttpClient {
 
     /**
      * Метод возвращает версию клиента
+     *
      * @return Версию клиента
      */
     public String getClientVersion() {
@@ -177,5 +227,74 @@ public final class WgApiClient extends AbstractHttpClient {
      */
     public <T extends AbstractMethodBlock> T getMethodBlock(Class<T> classMethodBlock) throws WgApiClientException {
         return super.getMethodBlock(classMethodBlock, this);
+    }
+
+    /**
+     * Класс описывает Builder для создания объекта WgApiClient
+     */
+    public static class Builder {
+
+        private HttpTransport httpTransport = new NetHttpTransport();
+        private JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
+        private WgApiUrlBuilder wgApiUrlBuilder = new WgApiUrlBuilder().withRegion(Region.RU);
+
+        /**
+         * Метод добавляет транспорт HTTP-соединения.
+         *
+         * @param httpTransport транспорт HTTP-соединения
+         * @return Builder для создания объекта WgApiClient
+         */
+        public Builder withHttpTransport(HttpTransport httpTransport) {
+            this.httpTransport = httpTransport;
+            return this;
+        }
+
+        /**
+         * Метод добавляет фабрику JSON.
+         *
+         * @param jsonFactory фабрика JSON
+         * @return Builder для создания объекта WgApiClient
+         */
+        public Builder withJsonFactory(JsonFactory jsonFactory) {
+            this.jsonFactory = jsonFactory;
+            return this;
+        }
+
+        public Builder withWgApiUrlBuilder(WgApiUrlBuilder wgApiUrlBuilder) {
+            this.wgApiUrlBuilder = wgApiUrlBuilder;
+            return this;
+        }
+
+        /**
+         * Метод добавляет регион Wargaming.net Public API для запросов.
+         *
+         * @param region регион Wargaming.net Public API для запросов
+         * @return Builder для создания объекта WgApiClient
+         */
+        public Builder withRegion(Region region) {
+            this.wgApiUrlBuilder.withRegion(region);
+            return this;
+        }
+
+        /**
+         * Метод добавляет регион Wargaming.net Public API для запросов.
+         *
+         * @param applicationID ID приложения Wargaming.net Public API
+         * @return Builder для создания объекта WgApiClient
+         * @throws WgApiClientException В случае если не указан ID приложения
+         */
+        public Builder withApplicationID(String applicationID) throws WgApiClientException {
+            this.wgApiUrlBuilder.withApplicationID(applicationID);
+            return this;
+        }
+
+        /**
+         * Метод создает объект WgApiClient.
+         *
+         * @return объект WgApiClient
+         */
+        public WgApiClient build() {
+            return new WgApiClient(httpTransport, jsonFactory, wgApiUrlBuilder);
+        }
     }
 }

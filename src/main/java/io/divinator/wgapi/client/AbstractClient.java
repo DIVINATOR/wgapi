@@ -31,12 +31,12 @@ abstract class AbstractClient {
     private static final String DECLARED_FIELD = "client";
 
     /**
-     * Метод возвращает обьект переданного в параметры класса метод-блока Wargaming.net Public API с установленным клиентом
+     * Метод возвращает объект переданного в параметры класса метод-блока Wargaming.net Public API с установленным клиентом
      *
      * @param classMethodBlock Класс метод-блока Wargaming.net Public API
      * @param client           Клиент для работы с Wargaming.net Public API
      * @param <T>              Тип класса метод-блока Wargaming.net Public API
-     * @return обьект переданного в параметры класса метод-блока Wargaming.net Public API с установленным клиентом
+     * @return объект переданного в параметры класса метод-блока Wargaming.net Public API с установленным клиентом
      * @throws WgApiClientException В случае, если произошла ошибка создания обьекта, либо не найден публичный конструктор
      *                              по умолчанию, либо не удалось встроить клиент в метод-блок Wargaming.net Public API
      */
@@ -45,11 +45,11 @@ abstract class AbstractClient {
     }
 
     /**
-     * Метод создает обьект родительского класса AbstractMethodBlock
+     * Метод создает объект родительского класса AbstractMethodBlock
      *
      * @param classMethodBlock Класс метод-блока Wargaming.net Public API
      * @param <T>              Тип класса метод-блока Wargaming.net Public API
-     * @return Обьект родительского класса AbstractMethodBlock
+     * @return Объект родительского класса AbstractMethodBlock
      * @throws WgApiClientException В случае, если произошла ошибка создания обьекта, либо не найден публичный конструктор по умолчанию
      */
     private <T extends AbstractMethodBlock> T instanceMethodBlock(Class<T> classMethodBlock) throws WgApiClientException {
@@ -69,7 +69,7 @@ abstract class AbstractClient {
 
 
     /**
-     * Метод втстраивает клиент в метод-блок Wargaming.net Public API
+     * Метод встраивает клиент в метод-блок Wargaming.net Public API
      *
      * @param methodBlock Метод-блок Wargaming.net Public API
      * @param client      Клиент для работы с Wargaming.net Public API

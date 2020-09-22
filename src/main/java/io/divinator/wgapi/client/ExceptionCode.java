@@ -169,7 +169,7 @@ public enum ExceptionCode {
 
     ;
 
-    private int code;
+    private final int code;
     private String title;
 
     ExceptionCode(int code, String title) {

@@ -17,10 +17,7 @@
 package io.divinator.wgapi.method.wot;
 
 import com.google.gson.reflect.TypeToken;
-import io.divinator.wgapi.client.AbstractMethodBlock;
-import io.divinator.wgapi.client.Cluster;
-import io.divinator.wgapi.client.WgApiClientException;
-import io.divinator.wgapi.client.WgApiUrlBuilder;
+import io.divinator.wgapi.client.*;
 import io.divinator.wgapi.entity.JsonResponse;
 import io.divinator.wgapi.entity.wot.auth.Prolongate;
 
@@ -98,6 +95,43 @@ public class AuthenticationMethod extends AbstractMethodBlock {
         }).getData();
     }
 
+    /**
+     * Метод осуществляет аутентификацию игрока при помощи Идентификатора Wargaming.net (OpenID), который используется
+     * в играх World of Tanks, World of Tanks Blitz, World of Warships, World of Warplanes и на сайте WarGag.ru.
+     * Игрок должен ввести email и пароль, использованные при создании аккаунта, или войти при помощи аккаунта
+     * социальной сети. Аутентификация не поддерживается для пользователя Game Center под iOS, если аккаунт не
+     * привязан к одной из социальных сетей или в профиле не указан email и пароль. Информация о статусе аутентификации
+     * будет отправлена на URL, указанный в параметре redirect_uri.
+     *
+     * @param params Массив параметров запроса (пример - "key=value"):
+     *               <p>
+     *               <b>"display"</b> - Внешний вид формы мобильных приложений. Допустимые значения:
+     *               "page" — Страница
+     *               "popup" — Всплывающее окно
+     *               <p>
+     *               <b>"expires_at"</b> - Срок действия access_token в формате UNIX.
+     *               Также можно указать дельту в секундах. Срок действия и дельта не должны превышать две недели,
+     *               начиная с настоящего времени.
+     *               <p>
+     *               <b>nofollow</b> - При передаче параметра nofollow=1 переадресация не происходит.
+     *               URL возвращается в ответе. По умолчанию: 0. Минимальное значение: 0. Максимальное значение: 1.
+     *               <p>
+     *               <b>redirect_uri</b> - URL на который будет переброшен пользователь после того как он
+     *               пройдет аутентификацию. По умолчанию: api.worldoftanks.ru/wot//blank/
+     * @return Возвращает URL, на который необходимо перенаправить пользователя для аутентификации.
+     * Возвращается, только если передан параметр nofollow=1.
+     */
+    public Map<String, String> login(String... params) throws WgApiClientException {
+        Map<String, Object> paramsMap = RequestUtils.parseRequestParams(params);
+
+        return login(
+                (String) paramsMap.get("display"),
+                (String) paramsMap.get("expires_at"),
+                (Boolean) paramsMap.get("nofollow").equals("1"),
+                (String) paramsMap.get("redirect_uri")
+        );
+    }
+
 
     /**
      * Метод генерирует новый access_token на основе действующего.
@@ -109,7 +143,7 @@ public class AuthenticationMethod extends AbstractMethodBlock {
      *                    <p>Обязательный параметр.
      * @param expires_at  Срок действия access_token в формате UNIX. Также можно указать дельту в секундах.
      *                    Срок действия и дельта не должны превышать две недели, начиная с настоящего времени.
-     * @return Сущьность "Новый access_token" {@link Prolongate}
+     * @return Сущность "Новый access_token" {@link Prolongate}
      * @throws WgApiClientException В случае если парсинг данных не удался, либо если возникла ошибка отправки
      *                              HTTP-запроса методом POST
      */
@@ -121,6 +155,25 @@ public class AuthenticationMethod extends AbstractMethodBlock {
 
         return super.post(urlBuilder, new TypeToken<JsonResponse<Prolongate>>() {
         }).getData();
+    }
+
+    /**
+     * Метод генерирует новый access_token на основе действующего.
+     *
+     * @param accessToken Старый ключ доступа к личным данным аккаунта пользователя;
+     *                    можно получить при помощи метода авторизации; действителен в течение определённого времени
+     *                    <p>Обязательный параметр.
+     * @param params      Массив параметров запроса (пример - "key=value"):
+     *                    <p>
+     *                    <b>"expires_at"</b> - Срок действия access_token в формате UNIX.
+     *                    Также можно указать дельту в секундах.
+     *                    Срок действия и дельта не должны превышать две недели, начиная с настоящего времени.
+     * @return Сущность "Новый access_token" {@link Prolongate}
+     * @throws WgApiClientException В случае если парсинг данных не удался, либо если возникла ошибка отправки
+     *                              HTTP-запроса методом POST
+     */
+    public Prolongate prolongate(String accessToken, String... params) throws WgApiClientException {
+        return prolongate(accessToken, (String) RequestUtils.parseRequestParams(params).get("expires_at"));
     }
 
     /**
@@ -143,4 +196,6 @@ public class AuthenticationMethod extends AbstractMethodBlock {
         return super.post(urlBuilder, new TypeToken<JsonResponse>() {
         });
     }
+
+
 }
