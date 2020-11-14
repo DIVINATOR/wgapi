@@ -16,19 +16,19 @@
 
 package io.divinator.wgapi.entity.wgn.wgtv;
 
-import com.google.api.client.util.Key;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 import java.util.Map;
 
 /**
- * Класс описывает сущьность "Отфильтрованный по играм список техники, о которой есть видео." для метод-блока {@link io.divinator.wgapi.method.wgn.WgtvMethod}
+ * Класс описывает сущность "Отфильтрованный по играм список техники, о которой есть видео." для метод-блока {@link io.divinator.wgapi.method.wgn.WgtvMethod}
  *
  * @author Sergey Divin
  */
 public final class Vehicle {
 
-    @Key("vehicles")
+    @SerializedName("vehicles")
     private Map<String, List<Integer>> vehicles;
 
     /**

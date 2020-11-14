@@ -16,20 +16,20 @@
 
 package io.divinator.wgapi.entity.wgn.servers;
 
-import com.google.api.client.util.Key;
+import com.google.gson.annotations.SerializedName;
 import io.divinator.wgapi.method.wgn.ServersMethod;
 
 /**
- * Класс описывает сущьность "Количество пользователей онлайн на игровом сервере" для метод-блока {@link ServersMethod}
+ * Класс описывает сущность "Количество пользователей онлайн на игровом сервере" для метод-блока {@link ServersMethod}
  *
  * @author Sergey Divin
  */
 public final class GameServer {
 
-    @Key("players_online")
+    @SerializedName("players_online")
     private int playersOnline;
 
-    @Key("server")
+    @SerializedName("server")
     private String server;
 
     /**

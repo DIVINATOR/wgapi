@@ -16,7 +16,7 @@
 
 package io.divinator.wgapi.entity;
 
-import com.google.api.client.util.Key;
+import com.google.gson.annotations.SerializedName;
 
 /**
  * Класс описывает формат Json-ответа от Wargaming.net Public API
@@ -25,16 +25,16 @@ import com.google.api.client.util.Key;
  */
 public final class JsonResponse<T> {
 
-    @Key("status")
+    @SerializedName("status")
     private String status;
 
-    @Key("meta")
+    @SerializedName("meta")
     private JsonResponseMeta meta = new JsonResponseMeta();
 
-    @Key("error")
+    @SerializedName("error")
     private JsonResponseError error = new JsonResponseError();
 
-    @Key("data")
+    @SerializedName("data")
     private T data;
 
     /**

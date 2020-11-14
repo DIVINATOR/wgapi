@@ -16,6 +16,9 @@
 
 package io.divinator.wgapi.client;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -26,9 +29,17 @@ import java.lang.reflect.Modifier;
  *
  * @author Sergey Divin
  */
-abstract class AbstractClient {
+abstract class AbstractClient implements WgApi{
 
     private static final String DECLARED_FIELD = "client";
+    private final Log log = LogFactory.getLog(getClass());
+
+    /**
+     * Метод возвращает объект строителя URL для Wargaming.net Public API
+     *
+     * @return Объект строителя URL для Wargaming.net Public API
+     */
+    protected abstract WgApiUriBuilder getWgApiUriBuilder();
 
     /**
      * Метод возвращает объект переданного в параметры класса метод-блока Wargaming.net Public API с установленным клиентом
@@ -37,10 +48,11 @@ abstract class AbstractClient {
      * @param client           Клиент для работы с Wargaming.net Public API
      * @param <T>              Тип класса метод-блока Wargaming.net Public API
      * @return объект переданного в параметры класса метод-блока Wargaming.net Public API с установленным клиентом
-     * @throws WgApiClientException В случае, если произошла ошибка создания обьекта, либо не найден публичный конструктор
+     * @throws WgApiException В случае, если произошла ошибка создания объекта, либо не найден публичный конструктор
      *                              по умолчанию, либо не удалось встроить клиент в метод-блок Wargaming.net Public API
      */
-    <T extends AbstractMethodBlock> T getMethodBlock(Class<T> classMethodBlock, AbstractHttpClient client) throws WgApiClientException {
+    protected  <T extends AbstractMethodBlock> T getMethodBlock(Class<T> classMethodBlock, AbstractHttpClient client) throws WgApiException {
+        log.debug(String.format("Method block \"%s\" selected.", classMethodBlock.getName()));
         return (T) setClientInMethodBlock(instanceMethodBlock(classMethodBlock), client);
     }
 
@@ -50,21 +62,23 @@ abstract class AbstractClient {
      * @param classMethodBlock Класс метод-блока Wargaming.net Public API
      * @param <T>              Тип класса метод-блока Wargaming.net Public API
      * @return Объект родительского класса AbstractMethodBlock
-     * @throws WgApiClientException В случае, если произошла ошибка создания обьекта, либо не найден публичный конструктор по умолчанию
+     * @throws WgApiException В случае, если произошла ошибка создания обьекта, либо не найден публичный конструктор по умолчанию
      */
-    private <T extends AbstractMethodBlock> T instanceMethodBlock(Class<T> classMethodBlock) throws WgApiClientException {
+    private <T extends AbstractMethodBlock> T instanceMethodBlock(Class<T> classMethodBlock) throws WgApiException {
         for (Constructor<?> constructor : classMethodBlock.getConstructors()) {
 
             if (constructor.getParameterCount() == 0 && Modifier.isPublic(constructor.getModifiers())) {
                 try {
                     return (T) constructor.newInstance();
                 } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-                    throw new WgApiClientException(ExceptionCode.CLIENT_REFLECTION_INSTANCE_METHOD_FAILED);
+                    throw new WgApiException(ErrorCode.CLIENT_REFLECTION_INSTANCE_METHOD_FAILED);
+                } finally {
+                    log.debug(String.format("Method block \"%s\" initialized.", classMethodBlock.getName()));
                 }
             }
         }
 
-        throw new WgApiClientException(ExceptionCode.CLIENT_REFLECTION_INSTANCE_METHOD_NO_CONSTRUCTOR);
+        throw new WgApiException(ErrorCode.CLIENT_REFLECTION_INSTANCE_METHOD_NO_CONSTRUCTOR);
     }
 
 
@@ -74,9 +88,9 @@ abstract class AbstractClient {
      * @param methodBlock Метод-блок Wargaming.net Public API
      * @param client      Клиент для работы с Wargaming.net Public API
      * @return метод-блок с установленным клиентом Wargaming.net Public API
-     * @throws WgApiClientException В случае, если не удалось встроить клиент в метод-блок Wargaming.net Public API
+     * @throws WgApiException В случае, если не удалось встроить клиент в метод-блок Wargaming.net Public API
      */
-    private AbstractMethodBlock setClientInMethodBlock(AbstractMethodBlock methodBlock, AbstractHttpClient client) throws WgApiClientException {
+    private AbstractMethodBlock setClientInMethodBlock(AbstractMethodBlock methodBlock, AbstractHttpClient client) throws WgApiException {
 
         Class<? extends AbstractMethodBlock> methodBlockClass = methodBlock.getClass();
 
@@ -91,7 +105,9 @@ abstract class AbstractClient {
             return methodBlock;
 
         } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new WgApiClientException(ExceptionCode.CLIENT_REFLECTION_EMBED_FAILED);
+            throw new WgApiException(ErrorCode.CLIENT_REFLECTION_EMBED_FAILED);
+        } finally {
+            log.debug(String.format("Сlient is embedded in method block object \"%s\".", methodBlock.getClass().getName()));
         }
     }
 }
