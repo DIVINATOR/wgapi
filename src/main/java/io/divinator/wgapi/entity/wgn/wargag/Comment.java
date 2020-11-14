@@ -16,34 +16,34 @@
 
 package io.divinator.wgapi.entity.wgn.wargag;
 
-import com.google.api.client.util.Key;
+import com.google.gson.annotations.SerializedName;
 
 /**
- * Класс описывает сущьность "Комментарий к контенту" для метод-блока {@link io.divinator.wgapi.method.wgn.WargagMethod}
+ * Класс описывает сущность "Комментарий к контенту" для метод-блока {@link io.divinator.wgapi.method.wgn.WargagMethod}
  *
  * @author Sergey Divin
  */
 public final class Comment {
 
-    @Key("account_id")
+    @SerializedName("account_id")
     private int accountId;
 
-    @Key("comment")
+    @SerializedName("comment")
     private String comment;
 
-    @Key("comment_id")
+    @SerializedName("comment_id")
     private int commentId;
 
-    @Key("content_id")
+    @SerializedName("content_id")
     private int contentId;
 
-    @Key("created_at")
+    @SerializedName("created_at")
     private int createdAt;
 
-    @Key("nickname")
+    @SerializedName("nickname")
     private String nickname;
 
-    @Key("author")
+    @SerializedName("author")
     private InformationContent.Author author;
 
     /**
@@ -95,7 +95,7 @@ public final class Comment {
     }
 
     /**
-     * Метод возвращает автора комментария {@link io.divinator.wgapi.entity.wgn.wargag.InformationContent.Author}
+     * Метод возвращает автора комментария {@link InformationContent.Author}
      * @return Автор комментария
      */
     public InformationContent.Author getAuthor() {

@@ -21,7 +21,9 @@ package io.divinator.wgapi.client;
  *
  * @author Sergey Divin
  */
-public enum ExceptionCode {
+public enum ErrorCode {
+
+    CLIENT_NO_INIT(1, "Client WGAPI NO INIT"),
     /**
      * Ошибка создания URL
      */
@@ -102,6 +104,8 @@ public enum ExceptionCode {
      */
     CLIENT_PARSING_FAILED(1400, "Data parsing failed"),
 
+    UNKNOWN_STATUS_CODE(1401, "Unknown status code"),
+
     /**
      * Запрос успешно обработан
      */
@@ -172,9 +176,18 @@ public enum ExceptionCode {
     private final int code;
     private String title;
 
-    ExceptionCode(int code, String title) {
+    ErrorCode(int code, String title) {
         this.code = code;
         this.title = title;
+    }
+
+    public static ErrorCode valueOf(int code) throws WgApiException {
+        for(ErrorCode ex : ErrorCode.values()) {
+            if (ex.getCode() == code) {
+                return ex;
+            }
+        }
+        throw new WgApiException(UNKNOWN_STATUS_CODE);
     }
 
     /**

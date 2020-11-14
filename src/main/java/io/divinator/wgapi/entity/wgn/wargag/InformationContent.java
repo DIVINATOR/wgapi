@@ -16,58 +16,58 @@
 
 package io.divinator.wgapi.entity.wgn.wargag;
 
-import com.google.api.client.util.Key;
+import com.google.gson.annotations.SerializedName;
 
 /**
- * Класс описывает сущьность "Информация о контенте" для метод-блока {@link io.divinator.wgapi.method.wgn.WargagMethod}
+ * Класс описывает сущность "Информация о контенте" для метод-блока {@link io.divinator.wgapi.method.wgn.WargagMethod}
  *
  * @author Sergey Divin
  */
 public final class InformationContent {
 
-    @Key("account_id")
+    @SerializedName("account_id")
     private Object accountId;
 
-    @Key("category_id")
+    @SerializedName("category_id")
     private Object categoryId;
 
-    @Key("content_id")
+    @SerializedName("content_id")
     private int contentId;
 
-    @Key("created_at")
+    @SerializedName("created_at")
     private int createdAt;
 
-    @Key("description")
+    @SerializedName("description")
     private String description;
 
-    @Key("media_preview_url")
+    @SerializedName("media_preview_url")
     private String mediaPreviewUrl;
 
-    @Key("media_url")
+    @SerializedName("media_url")
     private String mediaUrl;
 
-    @Key("nickname")
+    @SerializedName("nickname")
     private String nickname;
 
-    @Key("rating")
+    @SerializedName("rating")
     private int rating;
 
-    @Key("subject")
+    @SerializedName("subject")
     private String subject;
 
-    @Key("tag_id")
+    @SerializedName("tag_id")
     private int tagId;
 
-    @Key("type")
+    @SerializedName("type")
     private String type;
 
-    @Key("wargag_url")
+    @SerializedName("wargag_url")
     private String wargagUrl;
 
-    @Key("allowed_to_vote")
+    @SerializedName("allowed_to_vote")
     private Object allowedToVote;
 
-    @Key("author")
+    @SerializedName("author")
     private Author author;
 
     /**
@@ -211,13 +211,13 @@ public final class InformationContent {
      */
     public static class Author {
 
-        @Key("reputation")
+        @SerializedName("reputation")
         private int reputation;
 
-        @Key("status")
+        @SerializedName("status")
         private String status;
 
-        @Key("status_image")
+        @SerializedName("status_image")
         private String statusImage;
 
         /**

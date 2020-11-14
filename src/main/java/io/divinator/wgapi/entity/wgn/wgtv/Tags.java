@@ -16,24 +16,24 @@
 
 package io.divinator.wgapi.entity.wgn.wgtv;
 
-import com.google.api.client.util.Key;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
 /**
- * Класс описывает сущьность "Игровых проектов, категорий и программ" для метод-блока {@link io.divinator.wgapi.method.wgn.WgtvMethod}
+ * Класс описывает сущность "Игровых проектов, категорий и программ" для метод-блока {@link io.divinator.wgapi.method.wgn.WgtvMethod}
  *
  * @author Sergey Divin
  */
 public final class Tags {
 
-    @Key("categories")
+    @SerializedName("categories")
     private List<Categories> categories;
 
-    @Key("programs")
+    @SerializedName("programs")
     private List<Programs> programs;
 
-    @Key("projects")
+    @SerializedName("projects")
     private List<Projects> projects;
 
     /**
@@ -64,7 +64,7 @@ public final class Tags {
      *
      */
     public static class Projects extends TagsEntity {
-        @Key("project_id")
+        @SerializedName("project_id")
         private int projectId;
 
         /**
@@ -81,7 +81,7 @@ public final class Tags {
      *
      */
     public static class Programs extends TagsEntity {
-        @Key("program_id")
+        @SerializedName("program_id")
         private int programId;
 
         /**
@@ -98,7 +98,7 @@ public final class Tags {
      *
      */
     public static class Categories extends TagsEntity {
-        @Key("category_id")
+        @SerializedName("category_id")
         private int categoryId;
 
         /**
@@ -115,10 +115,10 @@ public final class Tags {
      *
      */
     public abstract static class TagsEntity {
-        @Key("name")
+        @SerializedName("name")
         private String name;
 
-        @Key("order")
+        @SerializedName("order")
         private int order;
 
         /**

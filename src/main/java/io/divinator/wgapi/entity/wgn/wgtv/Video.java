@@ -16,55 +16,55 @@
 
 package io.divinator.wgapi.entity.wgn.wgtv;
 
-import com.google.api.client.util.Key;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 import java.util.Map;
 
 /**
- * Класс описывает сущьность "Видео" для метод-блока {@link io.divinator.wgapi.method.wgn.WgtvMethod}
+ * Класс описывает сущность "Видео" для метод-блока {@link io.divinator.wgapi.method.wgn.WgtvMethod}
  *
  * @author Sergey Divin
  */
 public final class Video {
 
-    @Key("category_id")
+    @SerializedName("category_id")
     private List<Integer> categoryId;
 
-    @Key("description")
+    @SerializedName("description")
     private String description;
 
-    @Key("duration")
+    @SerializedName("duration")
     private int duration;
 
-    @Key("ext_title")
+    @SerializedName("ext_title")
     private String extTitle;
 
-    @Key("important")
+    @SerializedName("important")
     private boolean important;
 
-    @Key("program_id")
+    @SerializedName("program_id")
     private int programId;
 
-    @Key("project_id")
+    @SerializedName("project_id")
     private List<Integer> projectid;
 
-    @Key("published_at")
+    @SerializedName("published_at")
     private int publishedAt;
 
-    @Key("title")
+    @SerializedName("title")
     private String title;
 
-    @Key("vehicles")
+    @SerializedName("vehicles")
     private Map<String, String> vehicles;
 
-    @Key("video_id")
+    @SerializedName("video_id")
     private String videoid;
 
-    @Key("video_url")
+    @SerializedName("video_url")
     private String videoUrl;
 
-    @Key("thumbnails")
+    @SerializedName("thumbnails")
     private Map<String, Thumbnail> thumbnails;
 
     /**
@@ -190,13 +190,13 @@ public final class Video {
      */
     public static class Thumbnail {
 
-        @Key("url")
+        @SerializedName("url")
         private String url;
 
-        @Key("width")
+        @SerializedName("width")
         private int width;
 
-        @Key("height")
+        @SerializedName("height")
         private int height;
 
         /**

@@ -16,31 +16,31 @@
 
 package io.divinator.wgapi.entity.wgn.accounts;
 
-import com.google.api.client.util.Key;
+import com.google.gson.annotations.SerializedName;
 import io.divinator.wgapi.method.wgn.AccountsMethod;
 
 import java.util.List;
 
 /**
- * Класс описывает сущьность "Информация об аккаунте" для метод-блока {@link AccountsMethod}
+ * Класс описывает сущность "Информация об аккаунте" для метод-блока {@link AccountsMethod}
  *
  * @author Sergey Divin
  */
 public final class AccountInformation {
 
-    @Key("account_id")
+    @SerializedName("account_id")
     private int accountId;
 
-    @Key("created_at")
+    @SerializedName("created_at")
     private int createdAt;
 
-    @Key("nickname")
+    @SerializedName("nickname")
     private String nickname;
 
-    @Key("games")
+    @SerializedName("games")
     List<String> games;
 
-    @Key("private")
+    @SerializedName("private")
     private Private privat;
 
     /**
@@ -48,13 +48,13 @@ public final class AccountInformation {
      */
     public static class Private {
 
-        @Key("freeXp")
+        @SerializedName("freeXp")
         private int freeXp;
 
-        @Key("gold")
+        @SerializedName("gold")
         private int gold;
 
-        @Key("premium_expires_at")
+        @SerializedName("premium_expires_at")
         private int premiumExpiresAt;
 
         /**

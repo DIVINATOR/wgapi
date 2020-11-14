@@ -27,8 +27,8 @@ Wargaming.net Public API, которые предоставляют доступ
 
 ### Зависимости проэкта
 <b><i>WgApiClient</i></b> использует:
-* [Google HTTP Client Library for Java](https://github.com/googleapis/google-http-java-client) версии 1.34.2
-* [GSON extensions to the Google HTTP Client Library](https://github.com/googleapis/google-http-java-client) версии 1.34.2
+* [Apache HttpComponents](https://hc.apache.org/) версии 4.5.12
+* [Gson](https://www.sites.google.com/site/gson/gson-user-guide) версии 2.8.6
 
 ### Документация проэкта
 Документация проекта доступна [тут](https://divinator.github.io/docs/wgapi-client/index.html).
@@ -42,7 +42,7 @@ Wargaming.net Public API, которые предоставляют доступ
 <dependency>
   <groupId>io.github.divinator.wgapi</groupId>.                                     
   <artifactId>wgapi-client</artifactId>
-  <version>LATEST_VERSION</version>
+  <version>2.0.0</version>
 </dependency>
 ```
 
@@ -50,46 +50,54 @@ Wargaming.net Public API, которые предоставляют доступ
 Доступно несколько возможностей сконструировать обьект:
 + Указать только <b>"application_id"</b>
 ```
-WgApiClient client = new WgApiClient("application_id");
+WgApi wgApi = WgApiFactory.getWgApi("application_id");
 ```
 +  Указать <b>"регион"</b> и <b>"application_id"</b>
 ```
-WgApiClient client = new WgApiClient(Region.RU, "application_id");
+WgApi wgApi = WgApiFactory.getWgApi(Region.RU, "application_id");
 ```
-+  Указать <b>"транспортный протокол"</b>, <b>"регион"</b> и <b>"application_id"</b>
-```
-WgApiClient client = new WgApiClient(new NetHttpTransport(), Region.RU, "application_id");
-```
+
 > Указание собственного транспортного протокола возможно потребуется в случае, если работа клиента будет осуществляться через Proxy-сервер.
 
 + Далее необходимо инициализировать нужный "метод-блок", и у него вызвать нужный метод, с указанием параметров:
 ```
-AccountsMethod methodBlock = client.getMethodBlock(AccountsMethod.class);
+AccountsMethod methodBlock = wgApi.getMethodBlock(AccountsMethod.class);
 
-Map<String, AccountInformation> accountInfo = 
-         methodBlock.getAccountInfo("DIVlNATOR", null, null, null);
+JsonResponse<List<Account>> response = methodBlock.getListAccounts("DIVlNATOR");
+
+List<Account> data = response.getData();
 ```
 
-Как вы успели уже заметить, в параметры метода можно передать значение <b>"null"</b>.
-Переменные метода могут быть, как обязательные к заполнению, так и <b>"null"</b> (необязательные).
-Чтобы избавиться от <b>"null"</b>, можно расширить нужный <b>"метод-блок"</b> и переопределить нужный метод.
+В параметры метода можно передать значение String или Parameter (последние могут быть в некоторых методах необязательными).
 
-+ Возвращаемое значение у методов <b>"метод-блока"</b> может быть нескольких типов:
+```
+JsonResponse<List<Account>> response = methodBlock.getListAccounts("DIVlNATOR", new Parameter("language", "ru"));
+```
+
++ Возвращаемое значение у методов <b>"метод-блока"</b> это JsonResponse и содержит данные типа:
   + List (<b>Entity</b>)
   + Map <String, (<b>Entity</b>)>
   + Map <String, List (<b>Entity</b>)>
-  
+    
 > Entity - это сущности Wargaming.net Public API (см. [документацию](https://developers.wargaming.net/reference/)) со своими методами.
+
+JsonResponse содержит ответ от Wargaming Api в виде объекта сконструированного из json-формата.
+```
+response.getData();     // данные, содержащие сущности
+response.getError();    // данные об ошибке, если она есть
+response.getMeta();     // метаданные запроса
+response.isOk();        // true если запрос корректен, в противном случае false
+```
 
 Далее описан процесс получения нужных данных из <b>"Entity"</b>, на примере <b>"AccountInformation"</b>
 ```
-  AccountInformation accountInformation = accountInfo.get("3999999");
-  accountInformation.getNickname();
-  accountInformation.getAccountId();
+  List<Account> data = response.getData();
+  
+  Account account = data.get(0);
+          
+  account.getAccountId();
+  account.getNickname();
 ``` 
-
-## Внесение правок
-Прочтите [CONTRIBUTING.md](CONTRIBUTING.md) чтобы получить подробную информацию о правилах и процессе подачи запросов на включение кода.
 
 ## Управление версиями
 Мы используем [SemVer](http://semver.org/) для управления версиями. Для доступных версий, см. [tags](https://github.com/DIVINATOR/wgapi-client/tags). 

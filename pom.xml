@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.github.divinator.wgapi</groupId>
   <artifactId>wgapi-client</artifactId>
-  <version>1.0.0</version>
+  <version>2.0.0</version>
   <packaging>jar</packaging>
 
   <name>WgApiClient</name>
@@ -37,20 +37,20 @@
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <http-client>com.google.http-client</http-client>
-    <http-client.version>1.34.2</http-client.version>
   </properties>
 
   <dependencies>
+    <!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
     <dependency>
-      <groupId>${http-client}</groupId>
-      <artifactId>google-http-client</artifactId>
-      <version>${http-client.version}</version>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpclient</artifactId>
+      <version>4.5.12</version>
     </dependency>
+    <!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
     <dependency>
-      <groupId>${http-client}</groupId>
-      <artifactId>google-http-client-gson</artifactId>
-      <version>${http-client.version}</version>
+      <groupId>com.google.code.gson</groupId>
+      <artifactId>gson</artifactId>
+      <version>2.8.6</version>
     </dependency>
   </dependencies>
 
@@ -90,6 +90,14 @@
             </goals>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>8</source>
+          <target>8</target>
+        </configuration>
       </plugin>
     </plugins>
   </build>

@@ -16,22 +16,22 @@
 
 package io.divinator.wgapi.entity.wgn.wargag;
 
-import com.google.api.client.util.Key;
+import com.google.gson.annotations.SerializedName;
 
 /**
- * Класс описывает сущьность "Категория контента" для метод-блока {@link io.divinator.wgapi.method.wgn.WargagMethod}
+ * Класс описывает сущность "Категория контента" для метод-блока {@link io.divinator.wgapi.method.wgn.WargagMethod}
  *
  * @author Sergey Divin
  */
 public final class Category {
 
-    @Key("category_id")
+    @SerializedName("category_id")
     private int category_id;
 
-    @Key("name")
+    @SerializedName("name")
     private String name;
 
-    @Key("type")
+    @SerializedName("type")
     private String type;
 
     /**

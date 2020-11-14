@@ -16,14 +16,18 @@
 
 package io.divinator.wgapi.client;
 
-import com.google.api.client.http.HttpContent;
-import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.HttpResponse;
-import com.google.api.client.http.HttpTransport;
-import com.google.api.client.util.ObjectParser;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.impl.client.CloseableHttpClient;
 
 import java.io.IOException;
-import java.util.concurrent.Future;
+import java.io.UnsupportedEncodingException;
 
 /**
  * Абстрактный класс, который описывает функционал клиента для передачи GET, POST запросов к Wargaming.net Public API
@@ -32,118 +36,82 @@ import java.util.concurrent.Future;
  */
 public abstract class AbstractHttpClient extends AbstractClient {
 
-    private ObjectParser objectParser;
+    private final Log log = LogFactory.getLog(getClass());
 
     /**
      * Метод возвращает транспорт HTTP-соединения
      *
      * @return Транспорт HTTP-соединения
      */
-    abstract HttpTransport getHttpTransport();
+    protected abstract CloseableHttpClient getHttpClient();
 
     /**
-     * Метод возвращает таймаут соединения в миллисекундах
+     * Метод возвращает конфигурацию HTTP-соединения.
      *
-     * @return Таймаут соединения в миллисекундах
+     * @return Конфигурация HTTP-соединения
      */
-    abstract int getConnectTimeout();
-
-    /**
-     * Метод возвращает обьект строителя URL для Wargaming.net Public API
-     *
-     * @return Обьект строителя URL для Wargaming.net Public API
-     */
-    abstract WgApiUrlBuilder getUrlBuilder();
-
-    /**
-     * Метод устанавливает парсер для преобразования ответа от Wargaming.net Public API в Обьект
-     *
-     * @param objectParser Парсер для преобразования ответа от Wargaming.net Public API в Обьект
-     */
-    void setObjectParser(ObjectParser objectParser) {
-        this.objectParser = objectParser;
+    protected RequestConfig getDefaultRequestConfig() {
+        return RequestConfig.custom()
+                .setConnectTimeout(getConnectTimeout())
+                .build();
     }
 
     /**
-     * Метод выполняет HTTP-запрос методом GET и возвращает HTTP-ответ
+     * Метод выполняет HTTP-запрос методом GET и возвращает HTTP-ответ.
      *
-     * @param url Строитель URL для получения данных от Wargaming.net Public API
-     * @return HTTP-ответ от WargamingAPI
-     * @throws WgApiClientException В случае, если возникла ошибка отправки HTTP-запроса методом GET
+     * @param uriBuilder Строитель URL для получения данных от Wargaming.net Public API
+     * @return HTTP-ответ от Wargaming.net Public API
+     * @throws WgApiException В случае, если возникла ошибка отправки HTTP-запроса методом GET
      */
-    HttpResponse get(WgApiUrlBuilder url) throws WgApiClientException {
+    protected HttpResponse get(WgApiUriBuilder uriBuilder) throws WgApiException {
         try {
-            return request(RequestType.GET, url, null).execute();
-        } catch (IOException | WgApiClientException e) {
-            throw new WgApiClientException(ExceptionCode.CLIENT_REQUEST_GET_FAILED, e);
-        }
-    }
-
-
-    /**
-     * Метод выполняет HTTP-запрос методом POST и возвращает HTTP-ответ
-     *
-     * @param url Строитель URL для получения данных от Wargaming.net Public API
-     * @return HTTP-ответ от WargamingAPI
-     * @throws WgApiClientException В случае, если возникла ошибка отправки HTTP-запроса методом POST
-     */
-    HttpResponse post(WgApiUrlBuilder url) throws WgApiClientException {
-        try {
-            return request(RequestType.POST, url, url.getHttpContent()).execute();
-        } catch (IOException | WgApiClientException e) {
-            throw new WgApiClientException(ExceptionCode.CLIENT_REQUEST_POST_FAILED, e);
+            return request(new HttpGet(uriBuilder.build()));
+        } catch (WgApiException e) {
+            throw new WgApiException(ErrorCode.CLIENT_REQUEST_GET_FAILED, e);
+        } finally {
+            log.debug(String.format("SEND **GET** request: \"%s\".", uriBuilder));
         }
     }
 
     /**
-     * Метод ассинхронно выполняет HTTP-запрос методом GET и возвращает HTTP-ответ
+     * Метод выполняет HTTP-запрос методом POST и возвращает HTTP-ответ.
      *
-     * @param url Строитель URL для получения данных от Wargaming.net Public API
-     * @return HTTP-ответ от WargamingAPI
-     * @throws WgApiClientException В случае, если возникла ошибка отправки асинхронного HTTP-запроса методом GET
+     * @param uriBuilder Строитель URL для получения данных от Wargaming.net Public API
+     * @return HTTP-ответ от Wargaming.net Public API
+     * @throws WgApiException В случае, если возникла ошибка отправки HTTP-запроса методом POST
      */
-    Future<HttpResponse> getAsync(WgApiUrlBuilder url) throws WgApiClientException {
+    protected HttpResponse post(WgApiUriBuilder uriBuilder) throws WgApiException {
         try {
-            return request(RequestType.GET, url, null).executeAsync();
-        } catch (WgApiClientException e) {
-            throw new WgApiClientException(ExceptionCode.CLIENT_REQUEST_GET_ASYNC_FAILED, e);
+            HttpPost httpPost = new HttpPost(uriBuilder.build());
+            httpPost.setEntity(new UrlEncodedFormEntity(uriBuilder.getHttpContent()));
+            return request(httpPost);
+        } catch (WgApiException | UnsupportedEncodingException e) {
+            throw new WgApiException(ErrorCode.CLIENT_REQUEST_POST_FAILED, e);
+        } finally {
+            try {
+                log.debug(String.format(
+                        "SEND **POST** request: \"%s\" with HTTP CONTENT: %s.",
+                        uriBuilder,
+                        new UrlEncodedFormEntity(uriBuilder.getHttpContent()))
+                );
+            } catch (UnsupportedEncodingException e) {
+                log.warn(e);
+            }
         }
     }
 
     /**
-     * Метод ассинхронно выполняет HTTP-запрос методом POST и возвращает HTTP-ответ
+     * Метод отправляет HTTP-запрос к Wargaming.net Public API.
      *
-     * @param url Строитель URL для получения данных от Wargaming.net Public API
-     * @return HTTP-ответ от WargamingAPI
-     * @throws WgApiClientException В случае, если возникла ошибка отправки асинхронного HTTP-запроса методом POST
+     * @param requestType Тип запроса
+     * @return HTTP ответ
+     * @throws WgApiException В случае, если возникла ошибка отправки HTTP-запроса
      */
-    Future<HttpResponse> postAsync(WgApiUrlBuilder url) throws WgApiClientException {
+    private HttpResponse request(HttpUriRequest requestType) throws WgApiException {
         try {
-            return request(RequestType.POST, url, url.getHttpContent()).executeAsync();
-        } catch (WgApiClientException e) {
-            throw new WgApiClientException(ExceptionCode.CLIENT_REQUEST_POST_ASYNC_FAILED, e);
-        }
-    }
-
-    /**
-     * Метод подготавливает HTTP-запрос к Wargaming.net Public API
-     *
-     * @param requestType Тип запроса (WgApi.RequestType)
-     * @param url         Строитель URL для получения данных от Wargaming.net Public API
-     * @param content     Содержимое HTTP-запроса
-     * @return подготовленный HTTP-запрос
-     * @throws WgApiClientException В случае, если возникла ошибка подготовки HTTP-запроса
-     */
-    private HttpRequest request(RequestType requestType, WgApiUrlBuilder url, HttpContent content) throws WgApiClientException {
-        try {
-            return getHttpTransport()
-                    .createRequestFactory()
-                    .buildRequest(requestType.name(), url.build(), content)
-                    .setConnectTimeout(getConnectTimeout())
-                    .setParser(objectParser);
-
+            return getHttpClient().execute(requestType);
         } catch (IOException e) {
-            throw new WgApiClientException(ExceptionCode.CLIENT_REQUEST_FAILED);
+            throw new WgApiException(ErrorCode.CLIENT_REQUEST_FAILED);
         }
     }
 }

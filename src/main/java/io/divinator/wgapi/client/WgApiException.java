@@ -14,26 +14,28 @@
  * limitations under the License.
  */
 
-package io.divinator.wgapi.entity;
-
-import com.google.gson.annotations.SerializedName;
+package io.divinator.wgapi.client;
 
 /**
- * Класс описывает сущность "мета данные" в ответе от Wargaming.net Public API
+ * Класс описывает объект исключения Wargaming.net Public API.
  *
  * @author Sergey Divin
  */
-public final class JsonResponseMeta {
+public class WgApiException extends Throwable {
 
-    @SerializedName("count")
-    private int count;
+    public WgApiException() {
+        super();
+    }
 
-    /**
-     * Метод возвращает количество сущностей в поле data
-     *
-     * @return Количество сущностей в поле data
-     */
-    public int getCount() {
-        return count;
+    public WgApiException(String message) {
+        super(message);
+    }
+
+    public WgApiException(ErrorCode errorCode, Throwable throwable) {
+        super(String.format("[%s][%s] \"%s\"", errorCode.getCode(), errorCode.name(), errorCode.getTitle()), throwable);
+    }
+
+    public WgApiException(ErrorCode errorCode) {
+        this(errorCode, null);
     }
 }

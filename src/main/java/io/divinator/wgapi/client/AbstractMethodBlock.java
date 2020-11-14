@@ -16,8 +16,13 @@
 
 package io.divinator.wgapi.client;
 
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import io.divinator.wgapi.entity.JsonResponse;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.http.HttpResponse;
+import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
 
@@ -29,34 +34,32 @@ import java.io.IOException;
  */
 public abstract class AbstractMethodBlock {
 
+    private final Log log = LogFactory.getLog(getClass());
+
     private AbstractHttpClient client;
 
     /**
-     * Метод возвращает обьект строителя URL для Wargaming.net Public API используемого AbstractHttpClient
+     * Метод возвращает объект строителя URL для Wargaming.net Public API используемого AbstractHttpClient
      *
-     * @return Обьект строителя URL для Wargaming.net Public API используемого AbstractHttpClient
+     * @return Объект строителя URL для Wargaming.net Public API используемого AbstractHttpClient
      */
-    protected WgApiUrlBuilder getWgApiUrlBuilder() {
-        return client.getUrlBuilder();
+    protected WgApiUriBuilder getWgApiUriBuilder() {
+        return client.getWgApiUriBuilder();
     }
 
     /**
      * Метод отправлет http-запрос методом GET и получает данные от Wargaming.net Public API
      *
+     * @param <T>       Тип данных после парсинга.
      * @param url       Строитель URL для получения данных от Wargaming.net Public API
      * @param typeToken Универсальный тип. Вынуждает клиентов создавать подкласс этого класса,
      *                  который позволяет получать информацию о типе во время выполнения.
-     * @param <T>       Тип данных после парсинга.
      * @return Обьект данных типа "T"
-     * @throws WgApiClientException В случае если парсинг данных не удался, либо если возникла ошибка отправки
-     *                              HTTP-запроса методом GET
+     * @throws WgApiException В случае если парсинг данных не удался, либо если возникла ошибка отправки
+     *                        HTTP-запроса методом GET
      */
-    protected <T extends JsonResponse> T get(WgApiUrlBuilder url, TypeToken<T> typeToken) throws WgApiClientException {
-        try {
-            return (T) analizeJson((JsonResponse) client.get(url).parseAs(typeToken.getType()));
-        } catch (IOException | WgApiClientException e) {
-            throw new WgApiClientException(ExceptionCode.CLIENT_PARSING_FAILED, e);
-        }
+    protected <T extends JsonResponse> T get(WgApiUriBuilder url, TypeToken<T> typeToken) throws WgApiException {
+        return parseHttpResponse(client.get(url), typeToken);
     }
 
     /**
@@ -67,30 +70,37 @@ public abstract class AbstractMethodBlock {
      *                  который позволяет получать информацию о типе во время выполнения.
      * @param <T>       Тип данных после парсинга.
      * @return Обьект данных типа "Т"
-     * @throws WgApiClientException В случае если парсинг данных не удался, либо если возникла ошибка отправки
-     *                              HTTP-запроса методом POST
+     * @throws WgApiException В случае если парсинг данных не удался, либо если возникла ошибка отправки
+     *                        HTTP-запроса методом POST
      */
-    protected <T extends JsonResponse> T post(WgApiUrlBuilder url, TypeToken<T> typeToken) throws WgApiClientException {
-        try {
-            return (T) analizeJson((JsonResponse) client.post(url).parseAs(typeToken.getType()));
-        } catch (IOException | WgApiClientException e) {
-            throw new WgApiClientException(ExceptionCode.CLIENT_PARSING_FAILED, e);
-        }
+    protected <T extends JsonResponse> T post(WgApiUriBuilder url, TypeToken<T> typeToken) throws WgApiException {
+        return parseHttpResponse(client.post(url), typeToken);
     }
 
     /**
      * Метод анализирует Http-ответ от Wargaming.net Public API на наличие ошибки
      *
      * @param response Http-ответ до анализа
-     * @return Http-ответ после анализа
-     * @throws WgApiClientException В случае если найдена ошибка
+     * @return Http-ответ после анализа в виде объекта {@link JsonResponse}
+     * @throws WgApiException В случае если ошибки разбора ответа от Wargaming.net Public API
      */
-    private JsonResponse analizeJson(JsonResponse response) throws WgApiClientException {
 
-        if (!response.isOk()) {
-            throw new WgApiClientException(response.getError());
+    private <T extends JsonResponse> T parseHttpResponse(HttpResponse response, TypeToken<T> typeToken) throws WgApiException {
+        try {
+            String json = EntityUtils.toString(response.getEntity());
+
+            if (log.isDebugEnabled()) {
+                log.debug(String.format("[RESPONSE BODY]: %s", json));
+            }
+
+            return new GsonBuilder()
+                    .create()
+                    .fromJson(json, typeToken.getType());
+
+        } catch (IOException e) {
+            throw new WgApiException(ErrorCode.CLIENT_PARSING_FAILED);
+        } finally {
+            log.debug(String.format("Response body converted to %s object.", JsonResponse.class));
         }
-
-        return response;
     }
 }

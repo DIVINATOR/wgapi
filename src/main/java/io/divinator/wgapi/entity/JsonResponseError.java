@@ -16,8 +16,8 @@
 
 package io.divinator.wgapi.entity;
 
-import com.google.api.client.util.Key;
-import io.divinator.wgapi.client.ExceptionCode;
+import com.google.gson.annotations.SerializedName;
+import io.divinator.wgapi.client.ErrorCode;
 
 /**
  * Класс описывает сущность "ошибку в запросе" в ответе от Wargaming.net Public API
@@ -26,16 +26,16 @@ import io.divinator.wgapi.client.ExceptionCode;
  */
 public final class JsonResponseError {
 
-    @Key("code")
+    @SerializedName("code")
     private int code;
 
-    @Key("message")
+    @SerializedName("message")
     private String message;
 
-    @Key("field")
+    @SerializedName("field")
     private String field;
 
-    @Key("value")
+    @SerializedName("value")
     private String value;
 
     /**
@@ -79,16 +79,16 @@ public final class JsonResponseError {
      *
      * @return Код ошибки полученный от Wargaming.net Public API
      */
-    public ExceptionCode getExceptionCode() {
-        for (ExceptionCode exceptionCode : ExceptionCode.values()) {
-            if (exceptionCode.getCode() == getCode()) {
-                if (exceptionCode.name().contains(getMessage())) {
-                    return exceptionCode;
+    public ErrorCode getExceptionCode() {
+        for (ErrorCode errorCode : ErrorCode.values()) {
+            if (errorCode.getCode() == getCode()) {
+                if (errorCode.name().contains(getMessage())) {
+                    return errorCode;
                 }
             }
         }
 
-        return ExceptionCode.CLIENT_RESPONSE_ERROR_FAILED;
+        return ErrorCode.CLIENT_RESPONSE_ERROR_FAILED;
     }
 
     /**

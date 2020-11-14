@@ -16,22 +16,22 @@
 
 package io.divinator.wgapi.entity.wot.auth;
 
-import com.google.api.client.util.Key;
+import com.google.gson.annotations.SerializedName;
 
 /**
- * Класс описывает сущьность "Новый access_token" для метод-блока {@link io.divinator.wgapi.method.wot.AuthenticationMethod}
+ * Класс описывает сущность "Новый access_token" для метод-блока {@link io.divinator.wgapi.method.wot.AuthenticationMethod}
  *
  * @author Sergey Divin
  */
 public final class Prolongate {
 
-    @Key("access_token")
+    @SerializedName("access_token")
     private String accessToken;
 
-    @Key("account_id")
+    @SerializedName("account_id")
     private int accountId;
 
-    @Key("expires_at")
+    @SerializedName("expires_at")
     private int expiresAt;
 
     /**

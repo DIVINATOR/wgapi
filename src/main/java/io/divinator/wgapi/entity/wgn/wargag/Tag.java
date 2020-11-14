@@ -16,19 +16,19 @@
 
 package io.divinator.wgapi.entity.wgn.wargag;
 
-import com.google.api.client.util.Key;
+import com.google.gson.annotations.SerializedName;
 
 /**
- * Класс описывает сущьность "Информация о тегах к контенту" для метод-блока {@link io.divinator.wgapi.method.wgn.WargagMethod}
+ * Класс описывает сущность "Информация о тегах к контенту" для метод-блока {@link io.divinator.wgapi.method.wgn.WargagMethod}
  *
  * @author Sergey Divin
  */
-public class Tag {
+public final class Tag {
 
-    @Key("name")
+    @SerializedName("name")
     private String name;
 
-    @Key("tag_id")
+    @SerializedName("tag_id")
     private int tag_id;
 
     /**
