@@ -31,13 +31,16 @@ Wargaming.net Public API, которые предоставляют доступ
 * [Gson](https://www.sites.google.com/site/gson/gson-user-guide) версии 2.8.6
 
 ### Документация проэкта
-Документация проекта доступна [тут](#).
+Документация проекта доступна [тут](https://divinator.github.io/docs/wgapi-client/index.html).
 
 ## Установка
+
+Можно взять от сюда: [![Maven](https://img.shields.io/maven-central/v/io.github.divinator.wgapi/wgapi-client)](https://search.maven.org/artifact/io.github.divinator.wgapi/wgapi-client)
+
 Добавить в файл <b>"pom.xml"</b> вашего проекта следующую зависимость:
 ```xml
 <dependency>
-  <groupId>io.divinator.wgapi</groupId>
+  <groupId>io.github.divinator.wgapi</groupId>.                                     
   <artifactId>wgapi-client</artifactId>
   <version>2.0.0</version>
 </dependency>
