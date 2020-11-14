@@ -19,7 +19,7 @@ package io.divinator.wgapi.client;
 import io.divinator.wgapi.entity.JsonResponseError;
 
 /**
- * Класс описывает обьект исключения в работе {@link WgApiClient}
+ * Класс описывает объект исключения в работе {@link WgApiClient}
  *
  * @author Sergey Divin
  */

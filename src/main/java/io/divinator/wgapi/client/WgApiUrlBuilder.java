@@ -19,11 +19,13 @@ package io.divinator.wgapi.client;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpContent;
 import com.google.api.client.http.UrlEncodedContent;
+import com.sun.istack.internal.NotNull;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 
 /**
- * Класс описывает обьект строителя URL для Wargaming.net Public API
+ * Класс описывает объект строителя URL для Wargaming.net Public API
  * <p>
  * Все запросы в URI-формате имеют следующий вид: <b>http(s)://"server"/"API_name"/"method block"/"method name"/?"get params"</b>
  * </p>
@@ -138,10 +140,18 @@ public final class WgApiUrlBuilder implements Cloneable {
      *
      * @param applicationID Идентификатор приложения
      * @return Обьект строителя URL для Wargaming.net Public API с указанным идентификатором приложения
+     * @throws WgApiClientException В случае если applicationID не передан, либо пустой
      */
-    public WgApiUrlBuilder withApplicationID(String applicationID) {
-        this.applicationID = applicationID;
-        return this.withQuery("application_id", applicationID);
+    public WgApiUrlBuilder withApplicationID(@Nonnull String applicationID) throws WgApiClientException {
+        try {
+            if (!applicationID.isEmpty()) {
+                this.applicationID = applicationID;
+                return this.withQuery("application_id", applicationID);
+            }
+            throw new NullPointerException();
+        } catch (NullPointerException ex) {
+            throw new WgApiClientException(ExceptionCode.CLIENT_BUILD_URL_NULL_APP_ID);
+        }
     }
 
     /**
