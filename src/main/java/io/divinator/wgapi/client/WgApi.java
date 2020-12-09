@@ -41,6 +41,13 @@ public interface WgApi {
     String getClientVersion();
 
     /**
+     * Метод возвращает настройки приложения указанные в файле "wgapiclient.properties".
+     *
+     * @return Настройки приложения.
+     */
+    WgApiProperties getProperties();
+
+    /**
      * Метод устанавливает таймаут HTTP-соединения.
      *
      * @param connectTimeOut таймаут HTTP-соединения

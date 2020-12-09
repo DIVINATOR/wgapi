@@ -30,11 +30,10 @@ import org.apache.http.impl.client.HttpClientBuilder;
  */
 public final class WgApiClient extends AbstractHttpClient {
 
-    public final static String CLIENT_VERSION = "2.0.0";
+    public final static String CLIENT_VERSION = "2.1.0";
     private final Log log = LogFactory.getLog(getClass());
     private final WgApiUriBuilder wgApiUriBuilder;
-
-    private int connectTimeOut;
+    private final WgApiProperties properties;
 
     /**
      * Конструктор объекта клиента {@link WgApiClient}
@@ -43,7 +42,7 @@ public final class WgApiClient extends AbstractHttpClient {
      */
     public WgApiClient(WgApiUriBuilder wgApiUriBuilder) {
         this.wgApiUriBuilder = wgApiUriBuilder;
-        setConnectTimeOut(30000);
+        this.properties = new WgApiProperties();
         log.debug("WgApiClient initialized.");
     }
 
@@ -71,11 +70,12 @@ public final class WgApiClient extends AbstractHttpClient {
 
     /**
      * Метод устанавливает таймаут HTTP-соединения.
-     *
      * @param connectTimeOut таймаут HTTP-соединения
+     * @deprecated use {{@link #getProperties()}}
      */
+    @Deprecated
     public void setConnectTimeOut(int connectTimeOut) {
-        this.connectTimeOut = connectTimeOut;
+
     }
 
     /**
@@ -84,7 +84,7 @@ public final class WgApiClient extends AbstractHttpClient {
      * @return Таймаут соединения в миллисекундах
      */
     public int getConnectTimeout() {
-        return connectTimeOut;
+        return getProperties().getConnectionTimeout();
     }
 
     /**
@@ -109,5 +109,15 @@ public final class WgApiClient extends AbstractHttpClient {
      */
     protected WgApiUriBuilder getWgApiUriBuilder() {
         return wgApiUriBuilder;
+    }
+
+    /**
+     * Метод возвращает настройки приложения указанные в файле "wgapiclient.properties".
+     *
+     * @return Настройки приложения.
+     */
+    @Override
+    public WgApiProperties getProperties() {
+        return properties;
     }
 }

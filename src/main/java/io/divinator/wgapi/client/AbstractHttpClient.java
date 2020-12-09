@@ -18,6 +18,7 @@ package io.divinator.wgapi.client;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -46,14 +47,50 @@ public abstract class AbstractHttpClient extends AbstractClient {
     protected abstract CloseableHttpClient getHttpClient();
 
     /**
+     * Метод возвращает строителя конфигурации запроса HTTP-соединения.
+     *
+     * @return Строитель конфигурации запроса HTTP-соединения.
+     */
+    protected RequestConfig.Builder getDefaultRequestConfigBuilder() {
+        return RequestConfig.custom()
+                .setConnectTimeout(getProperties().getConnectionTimeout());
+    }
+
+    /**
+     * Метод устанавливает настройки прокси для сроителя конфигурации запроса HTTP-соединения.
+     *
+     * @param builder Строитель конфигурации запроса HTTP-соединения.
+     * @param proxy   Настройки прокси.
+     * @return Строитель конфигурации запроса HTTP-соединения с настройками Прокси.
+     */
+    protected RequestConfig.Builder setProxyConfig(RequestConfig.Builder builder, HttpHost proxy) {
+        return builder.setProxy(proxy);
+    }
+
+    /**
      * Метод возвращает конфигурацию HTTP-соединения.
      *
      * @return Конфигурация HTTP-соединения
      */
     protected RequestConfig getDefaultRequestConfig() {
-        return RequestConfig.custom()
-                .setConnectTimeout(getConnectTimeout())
-                .build();
+
+        RequestConfig.Builder configBuilder = getDefaultRequestConfigBuilder();
+
+        if (getProperties().getProxyHost() != null) {
+            configBuilder = setProxyConfig(
+                    configBuilder,
+                    new HttpHost(getProperties().getProxyHost(), getProperties().getProxyPort())
+            );
+
+            log.debug(String.format(
+                    "USE PROXY-HOST: \"%s:%s\"",
+                    getProperties().getProxyHost(),
+                    getProperties().getProxyPort()
+                    )
+            );
+        }
+
+        return configBuilder.build();
     }
 
     /**

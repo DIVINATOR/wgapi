@@ -20,11 +20,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.message.BasicNameValuePair;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Класс описывает объект строителя URI для Wargaming.net Public API
@@ -100,16 +100,17 @@ public final class WgApiUriBuilder implements Cloneable {
      * @return HTTP-контент (переданные параметры)
      */
     public List<NameValuePair> getHttpContent() {
-        List<NameValuePair> httpContent = new ArrayList<>();
-        Map<String, String> query = this.query;
-
-        if (!fields.isEmpty()) {
-            query.put(QUERY_FIELDS, getFieldsToString());
-        }
-
-        query.forEach((key, value) -> httpContent.add(new BasicNameValuePair(key, value)));
-
-        return httpContent;
+//        List<NameValuePair> httpContent = new ArrayList<>();
+//        Map<String, String> query = this.query;
+//
+//        if (!fields.isEmpty()) {
+//            query.put(QUERY_FIELDS, getFieldsToString());
+//        }
+//
+//        query.forEach((key, value) -> httpContent.add(new BasicNameValuePair(key, value)));
+//
+//        return httpContent;
+        return params;
     }
 
     /**
@@ -172,7 +173,8 @@ public final class WgApiUriBuilder implements Cloneable {
      * @return объект строителя URL для Wargaming.net Public API с указанным идентификатором приложения
      */
     public WgApiUriBuilder withApplicationID(String applicationID) {
-        return this.withQuery(QUERY_APPLICATION_ID, applicationID);
+//        return this.withQuery(QUERY_APPLICATION_ID, applicationID);
+        return this.withParameter(new Parameter("application_id", applicationID));
     }
 
     /**
@@ -182,7 +184,8 @@ public final class WgApiUriBuilder implements Cloneable {
      * @return объект строителя URL для Wargaming.net Public API с указанным ключем доступа к приватным данным
      */
     public WgApiUriBuilder withAccessToken(String accessToken) {
-        return this.withQuery(QUERY_ACCESS_TOKEN, accessToken);
+//        return this.withQuery(QUERY_ACCESS_TOKEN, accessToken);
+        return this.withParameter(new Parameter("access_token", accessToken));
     }
 
     /**
@@ -208,10 +211,12 @@ public final class WgApiUriBuilder implements Cloneable {
     /**
      * Метод возвращает объект строителя URL для Wargaming.net Public API с указанным списком полей
      * <p>При добавлении старые значения удаляются</p>
+     * @deprecated use {{@link #withParameters(Parameter...)}}
      *
      * @param fields Список полей
      * @return объект строителя URL для Wargaming.net Public API с указанным списком полей
      */
+    @Deprecated
     public WgApiUriBuilder withFields(List<String> fields) {
         WgApiUriBuilder builder = this.clone();
         if (fields != null) {
@@ -225,9 +230,11 @@ public final class WgApiUriBuilder implements Cloneable {
     /**
      * Метод возвращает объект строителя URL для Wargaming.net Public API с указанным полем
      *
+     * @deprecated use {{@link #withParameter(Parameter)}}
      * @param field Поле
      * @return объект строителя URL для Wargaming.net Public API с указанным полем
      */
+    @Deprecated
     public WgApiUriBuilder withField(String field) {
         WgApiUriBuilder builder = this.clone();
         builder.fields.add(field);
@@ -238,9 +245,11 @@ public final class WgApiUriBuilder implements Cloneable {
      * Метод возвращает объект строителя URL для Wargaming.net Public API с указанным массивом параметров
      * <p>При добавлении старые значения удаляются</p>
      *
+     * @deprecated use {{@link #withParameters(Parameter...)}}
      * @param queryArray Массив параметров
      * @return объект строителя URL для Wargaming.net Public API с указанным массивом параметров
      */
+    @Deprecated
     public WgApiUriBuilder withQueryArray(Map<String, String> queryArray) {
         WgApiUriBuilder builder = this.clone();
         if (queryArray != null) {
@@ -254,10 +263,12 @@ public final class WgApiUriBuilder implements Cloneable {
     /**
      * Метод возвращает объект строителя URL для Wargaming.net Public API с указанным названием и значением параметра
      *
+     * @deprecated use {{@link #withParameter(Parameter)}}
      * @param key   Название параметра
      * @param value Значение параметра
      * @return Объект строителя URL для Wargaming.net Public API с указанным названием и значением параметра
      */
+    @Deprecated
     public WgApiUriBuilder withQuery(String key, String value) {
         WgApiUriBuilder builder = this.clone();
         if (value != null) {
@@ -279,8 +290,8 @@ public final class WgApiUriBuilder implements Cloneable {
             buildScheme(uriBuilder);
             buildNode(uriBuilder);
             buildMethod(uriBuilder);
-            buildFields(uriBuilder);
-            buildQuery(uriBuilder);
+            //buildFields(uriBuilder);
+            //buildQuery(uriBuilder);
             buildParams(uriBuilder);
 
             if (log.isDebugEnabled()) {
@@ -348,8 +359,10 @@ public final class WgApiUriBuilder implements Cloneable {
     /**
      * Метод настраивает параметр "fields"
      *
+     * @deprecated use {{@link #buildParams(URIBuilder)}}
      * @param uriBuilder {@link URIBuilder}
      */
+    @Deprecated
     private void buildFields(URIBuilder uriBuilder) {
         if (!fields.isEmpty()) {
             uriBuilder.setParameter(QUERY_FIELDS, getFieldsToString());
@@ -359,8 +372,10 @@ public final class WgApiUriBuilder implements Cloneable {
     /**
      * Метод настраивает дополнительные параметры
      *
+     * @deprecated use {{@link #buildParams(URIBuilder)}}
      * @param uriBuilder Google URL builder
      */
+    @Deprecated
     private void buildQuery(URIBuilder uriBuilder) throws WgApiException {
         if (!query.isEmpty()) {
             query.forEach(uriBuilder::setParameter);
@@ -377,9 +392,10 @@ public final class WgApiUriBuilder implements Cloneable {
      */
     private void buildParams(URIBuilder uriBuilder) {
         if(!params.isEmpty()) {
-            List<NameValuePair> newParams = uriBuilder.getQueryParams();
-            newParams.addAll(params);
-            uriBuilder.setParameters(newParams);
+            // Fix.
+            //List<NameValuePair> newParams = uriBuilder.getQueryParams();
+            //newParams.addAll(params);
+            uriBuilder.setParameters(params);
         }
     }
 
@@ -421,5 +437,11 @@ public final class WgApiUriBuilder implements Cloneable {
             stringBuilder.deleteCharAt(stringBuilder.length() - 1);
         }
         return stringBuilder.toString();
+    }
+
+    public String getParamsToString() {
+        return params.stream()
+                .map(nameValuePair -> String.format("%s=%s", nameValuePair.getName(), nameValuePair.getValue()))
+                .collect(Collectors.joining("&"));
     }
 }
