@@ -69,6 +69,7 @@ public class AuthenticationMethod extends AbstractMethodBlock {
      *                   </ul>
      * @return Возвращает URL, на который необходимо перенаправить пользователя для аутентификации.
      * Возвращается, только если передан параметр nofollow=1.
+     * @throws WgApiException ???В случае ошибки
      */
     public JsonResponse<Map<String, String>> login(Parameter... parameters) throws WgApiException {
         WgApiUriBuilder urlBuilder = getWgApiUriBuilder()

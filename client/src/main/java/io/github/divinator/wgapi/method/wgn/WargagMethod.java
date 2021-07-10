@@ -135,17 +135,15 @@ public class WargagMethod extends AbstractMethodBlock {
      *
      * @param contentId  Идентификатор публикации
      *                   <p>Обязательный параметр.
-     *                   <p><br/>
      * @param parameters Массив необязательных параметров запроса (пример - <code>new Parameter("key", "value")</code>), где ключи параметров:
      *                   <ul>
-     *                      <li><b>"fields"</b> - Поля ответа. Поля разделяются запятыми. Вложенные поля разделяются точками.
-     *                      Для исключения поля используется знак «-» перед названием поля.
-     *                      Если параметр не указан, возвращаются все поля. Максимальное ограничение: 100.</li>
-     *                      <li><b>"page_no"</b> - Номер страницы результатов</li>
+     *                   <li><b>"fields"</b> - Поля ответа. Поля разделяются запятыми. Вложенные поля разделяются точками.
+     *                   Для исключения поля используется знак «-» перед названием поля.
+     *                   Если параметр не указан, возвращаются все поля. Максимальное ограничение: 100.</li>
+     *                   <li><b>"page_no"</b> - Номер страницы результатов</li>
      *                   </ul>
      * @return Комментарии к контенту
-     * @throws WgApiException В случае если парсинг данных не удался, либо если возникла ошибка отправки
-     *                        HTTP-запроса методом GET
+     * @throws WgApiException В случае если парсинг данных не удался, либо если возникла ошибка отправки HTTP-запроса методом GET
      */
     public JsonResponse<List<Comment>> getComments(Parameter contentId, Parameter... parameters) throws WgApiException {
         WgApiUriBuilder urlBuilder = getWgApiUriBuilder()
@@ -165,7 +163,6 @@ public class WargagMethod extends AbstractMethodBlock {
      *                   "video" — тип контента «Видео»
      *                   "picture" — тип контента «Картинки»
      *                   <p>Обязательный параметр.
-     *                   <p><br/>
      * @param parameters Массив необязательных параметров запроса (пример - <code>new Parameter("key", "value")</code>), где ключи параметров:
      *                   <ul>
      *                      <li><b>"category_id"</b> - Идентификатор категории контента.</li>
