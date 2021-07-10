@@ -14,13 +14,13 @@
     <packaging>jar</packaging>
 
     <name>WG Api Client for WorldofTanks</name>
-    <url>https://github.com/DIVINATOR/io.github.divinator.wgapi</url>
+    <url>https://github.com/DIVINATOR/wgapi</url>
     <description>Extension for working with an Wargaming.net Public API for game WorldofTanks.</description>
 
     <scm>
-        <url>https://github.com/DIVINATOR/io.github.divinator.wgapi-client</url>
-        <connection>scm:git:https://github.com/DIVINATOR/io.github.divinator.wgapi-client.git</connection>
-        <developerConnection>scm:git:https://github.com/DIVINATOR/io.github.divinator.wgapi-client.git</developerConnection>
+        <url>https://github.com/DIVINATOR/wgapi</url>
+        <connection>scm:git:https://github.com/DIVINATOR/wgapi.git</connection>
+        <developerConnection>scm:git:https://github.com/DIVINATOR/wgapi.git</developerConnection>
     </scm>
 
     <developers>
@@ -31,6 +31,17 @@
             <timezone>UTC+5</timezone>
         </developer>
     </developers>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
 
     <licenses>
         <license>
@@ -52,5 +63,71 @@
             <version>2.1.0</version>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.2.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.2.0</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.6</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                        <configuration>
+                            <keyname>${gpg.passphrase}</keyname>
+                            <passphraseServerId>${gpg.passphrase}</passphraseServerId>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>1.6.8</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <serverId>ossrh</serverId>
+                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                </configuration>
+            </plugin>
+
+        </plugins>
+    </build>
 
 </project>

@@ -1,9 +1,10 @@
 package io.github.divinator.wgapi.method.wot;
 
 import com.google.gson.reflect.TypeToken;
-import io.divinator.wgapi.client.*;
-import io.divinator.wgapi.entity.JsonResponse;
-import io.divinator.wgapi.entity.wot.encyclopedia.*;
+import io.github.divinator.wgapi.client.*;
+import io.github.divinator.wgapi.entity.JsonResponse;
+import io.github.divinator.wgapi.entity.wot.encyclopedia.*;
+import io.github.divinator.wgapi.entity.wot.encyclopedia.Module;
 
 import java.util.List;
 import java.util.Map;

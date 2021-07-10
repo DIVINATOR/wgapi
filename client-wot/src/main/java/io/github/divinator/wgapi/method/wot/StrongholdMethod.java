@@ -1,12 +1,12 @@
 package io.github.divinator.wgapi.method.wot;
 
 import com.google.gson.reflect.TypeToken;
-import io.divinator.wgapi.client.AbstractMethodBlock;
-import io.divinator.wgapi.client.*;
-import io.divinator.wgapi.entity.JsonResponse;
-import io.divinator.wgapi.entity.wot.stronghold.ActivateClanReserve;
-import io.divinator.wgapi.entity.wot.stronghold.ClanReserve;
-import io.divinator.wgapi.entity.wot.stronghold.StrongholdInformation;
+import io.github.divinator.wgapi.client.AbstractMethodBlock;
+import io.github.divinator.wgapi.client.*;
+import io.github.divinator.wgapi.entity.JsonResponse;
+import io.github.divinator.wgapi.entity.wot.stronghold.ActivateClanReserve;
+import io.github.divinator.wgapi.entity.wot.stronghold.ClanReserve;
+import io.github.divinator.wgapi.entity.wot.stronghold.StrongholdInformation;
 
 import java.util.List;
 import java.util.Map;
