@@ -31,17 +31,17 @@ Wargaming.net Public API, которые предоставляют доступ
 * [Gson](https://www.sites.google.com/site/gson/gson-user-guide) версии 2.8.6
 
 ### Документация проэкта
-Документация проекта доступна [тут](https://divinator.github.io/docs/wgapi-client/index.html).
+Документация проекта доступна [тут](https://divinator.github.io/docs/io.github.divinator.wgapi-client/index.html).
 
 ## Установка
 
-Можно взять от сюда: [![Maven](https://img.shields.io/maven-central/v/io.github.divinator.wgapi/wgapi-client)](https://search.maven.org/artifact/io.github.divinator.wgapi/wgapi-client)
+Можно взять от сюда: [![Maven](https://img.shields.io/maven-central/v/io.github.divinator.wgapi.wgapi-client)](https://search.maven.org/artifact/io.github.divinator.io.github.divinator.wgapi/io.github.divinator.wgapi-client)
 
 Добавить в файл <b>"pom.xml"</b> вашего проекта следующую зависимость:
 ```xml
 <dependency>
-  <groupId>io.github.divinator.wgapi</groupId>.                                     
-  <artifactId>wgapi-client</artifactId>
+  <groupId>io.github.divinator.io.github.divinator.wgapi</groupId>.                                     
+  <artifactId>io.github.divinator.wgapi-client</artifactId>
   <version>2.0.0</version>
 </dependency>
 ```
@@ -100,12 +100,12 @@ response.isOk();        // true если запрос корректен, в п�
 ``` 
 
 ## Управление версиями
-Мы используем [SemVer](http://semver.org/) для управления версиями. Для доступных версий, см. [tags](https://github.com/DIVINATOR/wgapi-client/tags). 
+Мы используем [SemVer](http://semver.org/) для управления версиями. Для доступных версий, см. [tags](https://github.com/DIVINATOR/io.github.divinator.wgapi-client/tags). 
 
 ## Авторы
 * **[Сергей "DIVINATOR"](https://divinator.github.io/)** - *Начальный этап работы* - <b><i>WgApiClient</i></b>
 
-Также представлен список [участников](https://github.com/DIVINATOR/wgapi-client/graphs/contributors) в этом проекте.
+Также представлен список [участников](https://github.com/DIVINATOR/io.github.divinator.wgapi-client/graphs/contributors) в этом проекте.
 
 ## Лицензия
 
